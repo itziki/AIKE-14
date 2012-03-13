@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<aike:maze xmlns:aike="http://alud2.ingenieria.deusto.es/course/view.php?id=233" rows="7" columns="7">
+	<aike:start row="7" column="1"/>
+	<aike:end row="1" column="7"/>
+	<aike:left-feet>
+		<aike:left row="1" column="1"/>
+		<aike:left row="1" column="3"/>
+		<aike:left row="1" column="7"/>
+		<aike:left row="2" column="2"/>
+		<aike:left row="2" column="5"/>
+		<aike:left row="2" column="6"/>
+		<aike:left row="2" column="7"/>
+		<aike:left row="3" column="1"/>
+		<aike:left row="3" column="3"/>
+		<aike:left row="3" column="5"/>
+		<aike:left row="3" column="7"/>
+		<aike:left row="4" column="6"/>
+		<aike:left row="5" column="1"/>
+		<aike:left row="5" column="2"/>
+		<aike:left row="5" column="3"/>
+		<aike:left row="5" column="5"/>
+		<aike:left row="5" column="6"/>
+		<aike:left row="6" column="4"/>
+		<aike:left row="6" column="5"/>
+		<aike:left row="6" column="6"/>
+		<aike:left row="7" column="1"/>
+		<aike:left row="7" column="3"/>
+		<aike:left row="7" column="5"/>
+		<aike:left row="7" column="7"/>
+	</aike:left-feet>
+	<aike:vertical-right-walls>
+		<aike:right-wall row="2" column="2"/>
+		<aike:right-wall row="3" column="2"/>
+		<aike:right-wall row="3" column="5"/>
+		<aike:right-wall row="5" column="4"/>
+		<aike:right-wall row="6" column="3"/>
+	</aike:vertical-right-walls>
+	<aike:horizontal-bottom-walls>
+		<aike:bottom-wall row="1" column="3"/>
+		<aike:bottom-wall row="3" column="6"/>
+		<aike:bottom-wall row="5" column="3"/>
+	</aike:horizontal-bottom-walls>
+</aike:maze>
