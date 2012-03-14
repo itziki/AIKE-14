@@ -34,8 +34,8 @@ public class MoveLeftOperator extends Operator{
 		switch (this.foot)
 		{
 			case RIGHT:
-				if(board.getTile(currPos.getY(), currPos.getY() - 1).isLeftFoot() &&
-					!board.getTile(currPos.getY(), currPos.getY() - 1).isRightWall() &&
+				if(board.getTile(currPos.getY(), currPos.getX() - 1).isLeftFoot() &&
+					!board.getTile(currPos.getY(), currPos.getX() - 1).isRightWall() &&
 					currPos.getX() > 1)
 				{
 					result = true;
@@ -59,7 +59,7 @@ public class MoveLeftOperator extends Operator{
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
 		
-		CurrentPosition cp = new CurrentPosition(environment.getCp().getX() - 1, environment.getCp().getY());
+		CurrentPosition cp = new CurrentPosition((environment.getCp().getX() - 1), environment.getCp().getY());
 		newEnvironment.setCp(cp);
 		return new State(newEnvironment);
 		

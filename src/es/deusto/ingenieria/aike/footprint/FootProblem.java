@@ -16,7 +16,8 @@ public class FootProblem extends Problem{
 	public FootProblem(State state)
 	{
 		super();
-		this.createFinalState(state);
+		this.addInitialState(state);
+		//this.createFinalState(state);
 		this.createOperators();
 	}
 	
@@ -35,16 +36,18 @@ public class FootProblem extends Problem{
 		super.addOperator(new MoveDownOperator(Foot.LEFT));
 	}
 	
-	private void createFinalState(State st)
+	public boolean isFinalState(State state)
 	{
-		Environment environment = (Environment)st.getInformation();
-		Board board = environment.getBoard();
-		CurrentPosition cp = environment.getCp();
-		Goal goal = environment.getGoal();
-		cp.setX(goal.getX());
-		cp.setY(goal.getY());
-		State finalState = new State(new Environment(board, cp, goal));
-		this.addFinalState(finalState);
+		boolean finalState = false;
+		if (state != null && state.getInformation() != null && state.getInformation() instanceof Environment)
+		{
+			Environment environment = (Environment)state.getInformation();
+			CurrentPosition cp = environment.getCp();
+			Goal goal = environment.getGoal();
+			
+			finalState = ((cp.getX() == goal.getX()) && (cp.getY() == goal.getY()));
+		}
+		return finalState;
 	}
 	
 	public void solve(SearchMethod searchMethod)

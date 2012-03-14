@@ -59,7 +59,7 @@ public class MoveDownOperator extends Operator{
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
 		
-		CurrentPosition cp = new CurrentPosition(environment.getCp().getX(), environment.getCp().getY() - 1);
+		CurrentPosition cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() - 1));
 		newEnvironment.setCp(cp);
 		return new State(newEnvironment);
 		

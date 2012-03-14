@@ -59,7 +59,7 @@ public class MoveRightOperator extends Operator{
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
 		
-		CurrentPosition cp = new CurrentPosition(environment.getCp().getX() + 1, environment.getCp().getY());
+		CurrentPosition cp = new CurrentPosition((environment.getCp().getX() + 1), environment.getCp().getY());
 		newEnvironment.setCp(cp);
 		return new State(newEnvironment);
 		

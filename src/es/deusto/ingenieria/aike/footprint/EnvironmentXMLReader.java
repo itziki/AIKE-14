@@ -51,10 +51,10 @@ public class EnvironmentXMLReader extends InformationXMLReader
                         } 
                         else if (qName.equals("aike:end")) 
                         {
-                        		int y= Integer.parseInt(attributes.getValue("row"));
-                        		int x= Integer.parseInt(attributes.getValue("column"));
+                        		int j= Integer.parseInt(attributes.getValue("row"));
+                        		int w= Integer.parseInt(attributes.getValue("column"));
                                              		
-                        		this.goal = new Goal(x, y);
+                        		this.goal = new Goal(w, j);
                         }
                         else  if (qName.equals("aike:left"))
                         {

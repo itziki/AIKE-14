@@ -36,14 +36,14 @@ public class MoveUpOperator extends Operator{
 			case RIGHT:
 				if(board.getTile(currPos.getY() + 1, currPos.getX()).isLeftFoot() &&
 					!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
-					currPos.getX() < board.getTam()[1] - 1) //¿?
+					currPos.getY() < board.getTam()[1] - 2) //¿?
 				{
 					result = true;
 				}
 			case LEFT:
-				if(board.getTile(currPos.getX(), currPos.getY() + 1).isRightFoot() &&
-					!board.getTile(currPos.getX(), currPos.getY() + 1).isBottomWall() &&
-					currPos.getX() < board.getTam()[1] - 1) //¿?
+				if(board.getTile(currPos.getY() + 1, currPos.getX()).isRightFoot() &&
+					!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
+					currPos.getY() < board.getTam()[1] - 2) //¿?
 				{
 					result = true;
 				}
@@ -59,7 +59,7 @@ public class MoveUpOperator extends Operator{
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
 		
-		CurrentPosition cp = new CurrentPosition(environment.getCp().getX(), environment.getCp().getY() + 1);
+		CurrentPosition cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() + 1));
 		newEnvironment.setCp(cp);
 		return new State(newEnvironment);
 		
