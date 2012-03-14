@@ -2,6 +2,7 @@ package es.deusto.ingenieria.aike.footprint;
 
 import es.deusto.ingenieria.aike.formulation.State;
 import es.deusto.ingenieria.aike.search.blind.BreadthFSwithLog;
+import es.deusto.ingenieria.aike.search.blind.DepthFSwithLog;
 
 public class MainProgram {
 	public static void main(String[] args) {

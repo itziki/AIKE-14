@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.deusto.ingenieria.aike.footprint.MoveOperator.Direction;
-import es.deusto.ingenieria.aike.footprint.MoveOperator.Feet;
 import es.deusto.ingenieria.aike.formulation.Problem;
 import es.deusto.ingenieria.aike.formulation.State;
 //import es.deusto.ingenieria.aike.search.Node;
@@ -35,15 +34,10 @@ public class FootProblem extends Problem{
 		super.addOperator(new MoveDownOperator(Foot.RIGHT));
 		super.addOperator(new MoveDownOperator(Foot.LEFT));
 	*/
-		super.addOperator(new MoveOperator(Feet.RIGHT,Direction.RIGHT));
-		super.addOperator(new MoveOperator(Feet.RIGHT,Direction.LEFT));
-		super.addOperator(new MoveOperator(Feet.RIGHT,Direction.DOWN));
-		super.addOperator(new MoveOperator(Feet.RIGHT,Direction.UP));
-		
-		super.addOperator(new MoveOperator(Feet.LEFT,Direction.RIGHT));
-		super.addOperator(new MoveOperator(Feet.LEFT,Direction.LEFT));
-		super.addOperator(new MoveOperator(Feet.LEFT,Direction.DOWN));
-		super.addOperator(new MoveOperator(Feet.LEFT,Direction.UP));
+		super.addOperator(new MoveOperator(Direction.RIGHT));
+		super.addOperator(new MoveOperator(Direction.LEFT));
+		super.addOperator(new MoveOperator(Direction.DOWN));
+		super.addOperator(new MoveOperator(Direction.UP));
 	}
 	
 	public boolean isFinalState(State state)
@@ -76,5 +70,4 @@ public class FootProblem extends Problem{
 			System.out.println("Unable to find the solution!");
 		}
 	}
-	
 }

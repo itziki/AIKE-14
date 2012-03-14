@@ -5,13 +5,6 @@ import es.deusto.ingenieria.aike.formulation.State;
 
 public class MoveOperator extends Operator{
 	//TO DO
-	
-	public static enum Feet
-	{
-		RIGHT,
-		LEFT
-	}
-	
 	public static enum Direction
 	{
 		RIGHT,
@@ -20,14 +13,12 @@ public class MoveOperator extends Operator{
 		DOWN
 	}
 	
-	private Feet foot;
 	private Direction direction;
 	private Board board;
 	
-	public MoveOperator(Feet foot, Direction direction)
+	public MoveOperator(Direction direction)
 	{
-		super(("Move " + direction.toString() + "- foot " + foot.toString()), 1d);
-		this.foot = foot;
+		super(("Move " + direction.toString()), 1d);
 		this.direction = direction;
 	}
 
@@ -41,9 +32,8 @@ public class MoveOperator extends Operator{
 		board = escenario.getBoard();
 		boolean result = false;
 		//System.out.println("cp right: " + currPos.getY() + "," + currPos.getX());
-		switch (this.foot)
+		if (board.getTile(currPos.getY(), currPos.getX()).isRightFoot())
 		{
-			case RIGHT:
 				switch (this.direction)
 				{
 					case RIGHT:
@@ -52,30 +42,32 @@ public class MoveOperator extends Operator{
 							currPos.getX() < board.getTam()[1] - 2)
 						{
 							result = true;
-						}
+						} break;
 					case LEFT:
 						if(board.getTile(currPos.getY(), currPos.getX() - 1).isLeftFoot() &&
 								!board.getTile(currPos.getY(), currPos.getX() - 1).isRightWall() &&
 								currPos.getX() > 1)
 							{
 								result = true;
-							}
+							}break;
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isLeftFoot() &&
 								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
 								currPos.getY() < board.getTam()[1] - 2) //¿?
 							{
 								result = true;
-							}
+							}break;
 					case UP:
 						if(board.getTile(currPos.getY() - 1, currPos.getX()).isLeftFoot() &&
 								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
 								currPos.getY() > 1) //¿?
 							{
 								result = true;
-							}
+							}break;
 				}
-			case LEFT:
+		}
+			else
+			{
 				switch (this.direction)
 				{
 					case RIGHT:
@@ -84,28 +76,29 @@ public class MoveOperator extends Operator{
 							currPos.getX() < board.getTam()[1] - 2)
 						{
 							result = true;
-						}
+						}break;
 					case LEFT:
 						if(board.getTile(currPos.getY(), currPos.getX() - 1).isRightFoot() &&
 								!board.getTile(currPos.getY(), currPos.getX() - 1).isRightWall() &&
 								currPos.getX() > 1)
 							{
 								result = true;
-							}
+							}break;
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isRightFoot() &&
 								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
 								currPos.getY() < board.getTam()[1] - 2) 
 							{
 								result = true;
-							}
+							}break;
 					case UP:
 						if(board.getTile(currPos.getY() - 1, currPos.getX()).isRightFoot() &&
 								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
 								currPos.getY() > 1) 
 							{
+								
 								result = true;
-							}
+							}break;
 				}
 		}
 		
@@ -120,11 +113,13 @@ public class MoveOperator extends Operator{
 		
 		switch (this.direction)
 		{
-			case RIGHT: {cp = new CurrentPosition((environment.getCp().getX() + 1), environment.getCp().getY());}
-			case LEFT: {cp = new CurrentPosition((environment.getCp().getX() - 1), environment.getCp().getY());}
-			case DOWN: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() + 1));}
-			case UP: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() - 1));}
+			case RIGHT: {cp = new CurrentPosition((environment.getCp().getX() + 1), environment.getCp().getY());}break;
+			case LEFT: {cp = new CurrentPosition((environment.getCp().getX() - 1), environment.getCp().getY());}break;
+			case DOWN: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() + 1));}break;
+			case UP: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() - 1));}break;
 		}
+		
+		System.out.println("ME MUEVO A FILA: " + cp.getY() + "COLUMNA: " + cp.getX());
 		
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
