@@ -53,7 +53,7 @@ public class MoveOperator extends Operator{
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isLeftFoot() &&
 								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
-								currPos.getY() < board.getTam()[1] - 2) //¿?
+								currPos.getY() < board.getTam()[0] - 2) //¿?
 							{
 								result = true;
 							}break;
@@ -87,7 +87,7 @@ public class MoveOperator extends Operator{
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isRightFoot() &&
 								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
-								currPos.getY() < board.getTam()[1] - 2) 
+								currPos.getY() < board.getTam()[0] - 2) 
 							{
 								result = true;
 							}break;
