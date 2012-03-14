@@ -52,14 +52,14 @@ public class MoveOperator extends Operator{
 							}break;
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isLeftFoot() &&
-								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
+								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
 								currPos.getY() < board.getTam()[0] - 2) //¿?
 							{
 								result = true;
 							}break;
 					case UP:
 						if(board.getTile(currPos.getY() - 1, currPos.getX()).isLeftFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
+								!board.getTile(currPos.getY() - 1, currPos.getX()).isBottomWall() &&
 								currPos.getY() > 1) //¿?
 							{
 								result = true;
@@ -86,14 +86,14 @@ public class MoveOperator extends Operator{
 							}break;
 					case DOWN:
 						if(board.getTile(currPos.getY() + 1, currPos.getX()).isRightFoot() &&
-								!board.getTile(currPos.getY() + 1, currPos.getX()).isBottomWall() &&
+								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
 								currPos.getY() < board.getTam()[0] - 2) 
 							{
 								result = true;
 							}break;
 					case UP:
 						if(board.getTile(currPos.getY() - 1, currPos.getX()).isRightFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
+								!board.getTile(currPos.getY() - 1, currPos.getX()).isBottomWall() &&
 								currPos.getY() > 1) 
 							{
 								
@@ -120,6 +120,7 @@ public class MoveOperator extends Operator{
 		}
 		
 		System.out.println("ME MUEVO A FILA: " + cp.getY() + "COLUMNA: " + cp.getX());
+		System.out.println(Math.abs(environment.getGoal().getY()-cp.getY()) + Math.abs(environment.getGoal().getX()-cp.getX()));
 		
 		newEnvironment.setBoard(environment.getBoard());
 		newEnvironment.setGoal(environment.getGoal());
