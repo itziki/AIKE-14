@@ -77,10 +77,11 @@ public class Board {
 	
 	public boolean equals(Object obj) 
 	{
+		boolean result = false;
 		if (obj != null	&& obj instanceof Board) 
 		{
 			Tile tile1;
-			Tile tile2;
+			Tile tile2;			
 			
 			for (int i = 0; i<tam[0];i++)
 			{
@@ -90,16 +91,23 @@ public class Board {
 					tile2 = ((Board)obj).getTile(i, j);
 					if (tile1.equals(tile2)) 
 					{
-						return false;
+						//return false;
+						result = true;
+					}
+					else
+					{
+						result = false;
 					}
 				}
 			}
-			return true;
+			//return true;
 		} 
 		else 
 		{
-			return false;
+			//return false;
+			result = false;
 		}
+		return result;
 	}
 
 	public void boardToString()

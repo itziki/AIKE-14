@@ -65,14 +65,14 @@ public class EnvironmentXMLReader extends InformationXMLReader
                             //chorry
                             board.setTile(pos, false, true);
                         }
-                        else  if (qName.equals("aike:right-walls"))
+                        else  if (qName.equals("aike:right-wall"))
                         {
                         	int[]pos = new int[2];
                             pos[0] = Integer.parseInt(attributes.getValue("row"));
                             pos[1] = Integer.parseInt(attributes.getValue("column"));
                             board.setTileVerticalWall(pos, true);
-                        }
-                        else  if (qName.equals("aike:bottom-walls"))
+                        }                
+                        else  if (qName.equals("aike:bottom-wall"))
                         {
                         	int[]pos = new int[2];
                             pos[0] = Integer.parseInt(attributes.getValue("row"));
