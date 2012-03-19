@@ -16,11 +16,11 @@ public class MainProgram {
 			State initialState = new State((Environment)environmentSAXParser.getInformation());
 			FootProblem problem = new FootProblem(initialState);
 			problem.addInitialState(initialState);
-			
-			SearchMethod search = new BestFS(new ManhattanDistance());
+			SearchMethod search= BreadthFSwithLog.getInstance();
+		//	SearchMethod search = new BestFS(new ManhattanDistance());
+		//	problem.solve(search);
+		//	BestFSwithLog search = new BestFSwithLog(new ManhattanDistance());
 			problem.solve(search);
-			//BestFSwithLog search = BestFSwithLog();
-			//problem.solve(search);
 		} catch (Exception ex) {
 			System.err.println("% [MainProgram] Error: " + ex.getMessage());
 			ex.printStackTrace();

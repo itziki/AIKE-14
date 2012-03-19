@@ -17,64 +17,69 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	public AStarWithLog(EvaluationFunction function){
 		super(function);
 	}
+
+	/*
+	1.Make a node with the initial problem state
+	2.Insert node into the frontier data structure
+	3.Initialize the list of EXPANDED nodes to the empty list
+	4.WHILE final state not found AND the frontier is NOT empty DO:
+		4.1 Remove first node from the frontier.
+		4.2 IF node contains final state THEN final state found.
+		4.3 IF node doesn’t contain final state THEN
+		4.3.1 Insert node into the EXPANDED nodes list
+		4.3.2 EXPAND node’s state AND Insert successor nodes into the frontier
+		4.3.3 Sort the frontier in ascending order of f(n)
+	5.IF final state found THEN return sequence of actions found
+		ELSE return “solution not found” 
+	 */
 	
 	public Node search(Problem problem, State initialState) {
-
+		
+		List<Node> successorNodes = null;
 		List<Node> frontier = new ArrayList<Node>();
+		Node firstNode = null;
 		//List of states generated during the search process. This is used to check for repeated states.
 		List<State> generatedStates = new ArrayList<State>();
-		//List of states expended during the search process. This is used to check for repeated states.
-		List<State> expandedStates = new ArrayList<State>();
-		//First node in the list of generated nodes.
-		Node firstNode = null;
-		//successor nodes list.
-		List<Node> successorNodes = null;
-		//Flag that signals whether a solution has been found.
+		//1.Make a node with the initial problem state
+		Node initialNode = new Node(initialState);
+		//2.Insert node into the frontier data structure
+		frontier.add(initialNode);
+		//3.Initialize the list of EXPANDED nodes to the empty list
+		List<State> expandedNodes = new ArrayList<State>();
+		//4.WHILE final state not found AND the frontier is NOT empty DO:
 		boolean solutionFound = false;
-
-		//Defines and initializes the search log.
-		SearchLog searchLog = this.createLog();
-		
-		//Initialize the generated nodes list with a node containing the problem's initial state.
-		frontier.add(new Node(initialState));
-
-		//Loop until the problem is solved or the generated nodes list is empty
-		while (!solutionFound && !frontier.isEmpty()) {			
-			//write the content of the generated nodes list in the search log.
-			this.writeLog(searchLog, frontier);			
-			//remove the first node from the generated nodes list.
+		while (!solutionFound && !frontier.isEmpty())
+		{
+			//4.1 Remove first node from the frontier.
 			firstNode = frontier.remove(0);
-			
-			//If the first node contains a problem's final state
-			if (problem.isFinalState(firstNode.getState())) {
-				//change the flag to signal that the problem is solved
+			//4.2 IF node contains final state THEN final state found.
+			if(problem.isFinalState(firstNode.getState()))
+			{
 				solutionFound = true;
-			//If the first node doesn't contain a problem's final state				
-			} else {
-				//Expand the first node.
-				successorNodes = this.expand(firstNode, problem, generatedStates, expandedStates);
-				//If new successor nodes resulted from the expansion
-				if (successorNodes != null && !successorNodes.isEmpty()) {
-					//Add the successor nodes to the generated nodes list.
-					frontier.addAll(successorNodes);
-					//Sort the generated nodes list according to the evaluation function value
-					// of the nodes. This comparison criteria is defined within the compareTo()
-					// method of Node.
-					Collections.sort(frontier);
-				}
+			}
+			//4.3 IF node doesn’t contain final state THEN
+			else
+			{
+			//4.3.1 Insert node into the EXPANDED nodes list
+				expandedNodes.add(firstNode.getState());
+			//4.3.2 EXPAND node’s state AND Insert successor nodes into the frontier
+				successorNodes = this.expandH(firstNode, expandedNodes, frontier, problem);
+				frontier.addAll(successorNodes);
+			//4.3.3 Sort the frontier in ascending order of f(n)
+				Collections.sort(frontier);
 			}
 		}
-		
-		this.closeLog(searchLog);
-		// If the problem is solved
-		if (solutionFound) {
-			//Return the first node as it contains the problem's final state
+		//5.IF final state found THEN return sequence of actions found
+		if(solutionFound)
+		{
 			return firstNode;
-		//If the problem is not solved
-		} else {
-			//return null
+		}
+		//ELSE return “solution not found”
+		else
+		{
 			return null;
 		}
+		
 	}
 
 	/**
@@ -92,48 +97,67 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	 *            List<State> states expanded along the search process.
 	 * @return List<Node> containing the successor nodes.
 	 */
-	protected List<Node> expandH(Node node, Problem problem, List<State> generatedStates, List<State> expandedStates) {
-		List<Node> successorNodes = new ArrayList<Node>();
-		Node successorNode = null;
-		State currentState = null;
-		State successorState = null;
-		
-		//If the current node and problem aren't null
-		if (node != null && problem != null) {
-			//Make the current state the state kept in the node.
-			currentState = node.getState();
-			//Remove current state from the list of generated states.
-			generatedStates.remove(currentState);
-			//Insert current state to the list of generated states.
-			expandedStates.add(currentState);			
-			//If current state is not null
-			if (currentState != null) {
-				//process the list of problem operators
-				for (Operator operator : problem.getOperators()) {
-					//Apply the operator to the current state
-					successorState = operator.apply(currentState);
-					//If the operator was applicable, a new successor state was generated
-					if (successorState != null) {
-						//make a new node to keep the new successor state
-						successorNode = new Node(successorState);
-						//If the new node hadn't been generated before nor expanded
-						if (!generatedStates.contains(successorNode) && !expandedStates.contains(successorNode)) {
-							//Set values for the various node's attributes
-							successorNode.setOperator(operator.getName());
-							successorNode.setParent(node);
-							successorNode.setDepth(node.getDepth() + 1);
-							//evaluation function = heuristic function
-							successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
-							successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
-							//Add the new node to the list of successor nodes.
-							successorNodes.add(successorNode);
-							//Insert current successor State to the list of generated states
-							generatedStates.add(successorState);
-						}
-					}
-				}
-			}
+	
+	/*
+	 * Function Expand(node, expanded_nodes, frontier )
+	1.FOR EACH of the node’s successors DO:
+		1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
+			Compute f(successor) = g(successor) + h(successor)
+			Create parent link between successor and node
+			Add successor to list of successors
+		1.2 IF successor is in frontier THEN
+			Compute fnew(successor) = g(successor) + h(successor)
+			IF fprevious(successor) “worse than” fnew(successor) THEN
+			Remove previous parent link for successor and make parent link to node
+			Make f(successor)= fnew(successor)
+		1.3 IF successor is in EXPANDED nodes THEN
+			Compute fnew(successor) = g(successor) + h(successor)
+			IF fprevious(successor) “worse than” fnew(successor) THEN
+			Remove previous parent link for successor and make parent link to node
+			Make f(successor)= fnew(successor) and update f() for each of successor’s children
+	2.return list of successors
+	 * */
+	protected List<Node> expandH(Node node, List<State> expandedNodes,List<Node> frontier, Problem problem) {
+	
+		List<Node> successorNodes = null;
+		//	1.FOR EACH of the node’s successors DO:
+	//1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
+		if(!frontier.contains(node) && !expandedNodes.contains(node))
+		{
+		//	Compute f(successor) = g(successor) + h(successor)
+			successorNode.setOperator(operator.getName());
+			successorNode.setParent(node);
+			successorNode.setDepth(node.getDepth() + 1);
+			//evaluation function = heuristic function
+			successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+			successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+		//	Create parent link between successor and node
+		//	Add successor to list of successors
 		}
+	//1.2 IF successor is in frontier THEN
+		else if(frontier.contains(node))
+		{
+	//	Compute fnew(successor) = g(successor) + h(successor)
+		node.setG(this.getEvaluationFunction().calculateG(node));
+		node.setH(this.getEvaluationFunction().calculateH(node));
+	//	IF fprevious(successor) “worse than” fnew(successor) THEN
+	//	Remove previous parent link for successor and make parent link to node
+	//	Make f(successor)= fnew(successor)
+		}
+	//1.3 IF successor is in EXPANDED nodes THEN
+		if(expandedNodes.contains(node))
+		{
+	//	Compute fnew(successor) = g(successor) + h(successor)
+			node.setG(this.getEvaluationFunction().calculateG(node));
+			node.setH(this.getEvaluationFunction().calculateH(node));
+	//	IF fprevious(successor) “worse than” fnew(successor) THEN
+	//	Remove previous parent link for successor and make parent link to node
+	//	Make f(successor)= fnew(successor) and update f() for each of successor’s children
+		}
+	//2.return list of successors
+		
+		
+		
 		return successorNodes;
 	}
 }
