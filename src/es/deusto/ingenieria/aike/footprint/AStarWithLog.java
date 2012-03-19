@@ -2,6 +2,7 @@ package es.deusto.ingenieria.aike.footprint;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import es.deusto.ingenieria.aike.formulation.Operator;
@@ -120,44 +121,90 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	protected List<Node> expandH(Node node, List<State> expandedNodes,List<Node> frontier, Problem problem) {
 	
 		List<Node> successorNodes = null;
+		Node successorNode = null;
+		State successorState = null;
+		State currentState = node.getState();
 		//	1.FOR EACH of the node’s successors DO:
-	//1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
-		if(!frontier.contains(node) && !expandedNodes.contains(node))
+		for(Operator operator: problem.getOperators())
 		{
-		//	Compute f(successor) = g(successor) + h(successor)
-			successorNode.setOperator(operator.getName());
-			successorNode.setParent(node);
-			successorNode.setDepth(node.getDepth() + 1);
-			//evaluation function = heuristic function
-			successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
-			successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
-		//	Create parent link between successor and node
-		//	Add successor to list of successors
-		}
-	//1.2 IF successor is in frontier THEN
-		else if(frontier.contains(node))
-		{
-	//	Compute fnew(successor) = g(successor) + h(successor)
-		node.setG(this.getEvaluationFunction().calculateG(node));
-		node.setH(this.getEvaluationFunction().calculateH(node));
-	//	IF fprevious(successor) “worse than” fnew(successor) THEN
-	//	Remove previous parent link for successor and make parent link to node
-	//	Make f(successor)= fnew(successor)
-		}
-	//1.3 IF successor is in EXPANDED nodes THEN
-		if(expandedNodes.contains(node))
-		{
-	//	Compute fnew(successor) = g(successor) + h(successor)
-			node.setG(this.getEvaluationFunction().calculateG(node));
-			node.setH(this.getEvaluationFunction().calculateH(node));
-	//	IF fprevious(successor) “worse than” fnew(successor) THEN
-	//	Remove previous parent link for successor and make parent link to node
-	//	Make f(successor)= fnew(successor) and update f() for each of successor’s children
-		}
-	//2.return list of successors
+			successorState = operator.apply(currentState);
+			successorNode = new Node(successorState);
+			//1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
+			if(!frontier.contains(successorNode) && !expandedNodes.contains(successorNode))
+			{
+			//	Compute f(successor) = g(successor) + h(successor)
+				successorNode.setOperator(operator.getName());
+				successorNode.setParent(node);
+				successorNode.setDepth(node.getDepth() + 1);
+				//evaluation function = heuristic function
+				successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+				successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+			//	Create parent link between successor and node
+				successorNode.setParent(node);
+			//	Add successor to list of successors
+				successorNodes.add(successorNode);
+			}
+		//1.2 IF successor is in frontier THEN
+			else if(frontier.contains(node))
+			{
+		//	Compute fnew(successor) = g(successor) + h(successor)
+				successorNode.setOperator(operator.getName());
+				successorNode.setParent(node);
+				successorNode.setDepth(node.getDepth() + 1);
+				//evaluation function = heuristic function
+				successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+				successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+		//	IF fprevious(successor) “worse than” fnew(successor) THEN
+				Node previousNode = this.getNodeFrontier(frontier, successorNode);
+				double fPreviousNode = (previousNode.getG() + previousNode.getH());
+				double fsuccessorNode = (successorNode.getG() + successorNode.getH());
+				if(fPreviousNode > fsuccessorNode)
+				{
+			//	Remove previous parent link for successor and make parent link to node
+					successorNode.setParent(previousNode.getParent());
+					frontier.remove(previousNode);
+			//	Make f(successor)= fnew(successor)
+				}
+			}
+		//1.3 IF successor is in EXPANDED nodes THEN
+			if(expandedNodes.contains(node))
+			{
+		//	Compute fnew(successor) = g(successor) + h(successor)
+				successorNode.setOperator(operator.getName());
+				successorNode.setParent(node);
+				successorNode.setDepth(node.getDepth() + 1);
+				//evaluation function = heuristic function
+				successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+				successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+//				IF fprevious(successor) “worse than” fnew(successor) THEN
+				Node previousNode = this.getNodeFrontier(frontier, successorNode);
+				double fPreviousNode = (previousNode.getG() + previousNode.getH());
+				double fsuccessorNode = (successorNode.getG() + successorNode.getH());
+				if(fPreviousNode > fsuccessorNode)
+				{
+			//	Remove previous parent link for successor and make parent link to node
+					successorNode.setParent(previousNode.getParent());
+			//	Make f(successor)= fnew(successor) and update f() for each of successor’s children
+				}
+			}
+		//2.return list of successors
 		
-		
+		}
 		
 		return successorNodes;
+	}
+	
+	public Node getNodeFrontier(List<Node> frontier, Node node)
+	{
+		Node sameNode = null;
+		Iterator iterator = frontier.iterator();
+		while (iterator.hasNext())
+		{
+			if (node.equals(iterator))
+			{
+				sameNode = node;
+			}
+		}
+		return sameNode;
 	}
 }
