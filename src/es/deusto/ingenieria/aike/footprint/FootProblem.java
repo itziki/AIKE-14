@@ -6,7 +6,6 @@ import java.util.List;
 import es.deusto.ingenieria.aike.footprint.MoveOperator.Direction;
 import es.deusto.ingenieria.aike.formulation.Problem;
 import es.deusto.ingenieria.aike.formulation.State;
-//import es.deusto.ingenieria.aike.search.Node;
 import es.deusto.ingenieria.ingenieria.search.Node;
 import es.deusto.ingenieria.ingenieria.search.SearchMethod;
 
@@ -22,18 +21,7 @@ public class FootProblem extends Problem{
 	
 	protected void createOperators()
 	{
-	/*	super.addOperator(new MoveRightOperator(Foot.RIGHT));
-		super.addOperator(new MoveRightOperator(Foot.LEFT));
-		
-		super.addOperator(new MoveLeftOperator(Foot.RIGHT));
-		super.addOperator(new MoveLeftOperator(Foot.LEFT));
-		
-		super.addOperator(new MoveUpOperator(Foot.RIGHT));
-		super.addOperator(new MoveUpOperator(Foot.LEFT));
-		
-		super.addOperator(new MoveDownOperator(Foot.RIGHT));
-		super.addOperator(new MoveDownOperator(Foot.LEFT));
-	*/
+	
 		super.addOperator(new MoveOperator(Direction.RIGHT));
 		super.addOperator(new MoveOperator(Direction.LEFT));
 		super.addOperator(new MoveOperator(Direction.DOWN));

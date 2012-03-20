@@ -35,8 +35,9 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	 */
 	
 	public Node search(Problem problem, State initialState) {
-		
+
 		List<Node> successorNodes = null;
+		SearchLog searchLog = this.createLog();
 		List<Node> frontier = new ArrayList<Node>();
 		Node firstNode = null;
 		//List of states generated during the search process. This is used to check for repeated states.
@@ -51,6 +52,7 @@ public class AStarWithLog extends HeuristicSearchMethod {
 		boolean solutionFound = false;
 		while (!solutionFound && !frontier.isEmpty())
 		{
+			this.writeLog(searchLog, frontier);	
 			//4.1 Remove first node from the frontier.
 			firstNode = frontier.remove(0);
 			//4.2 IF node contains final state THEN final state found.
@@ -65,11 +67,17 @@ public class AStarWithLog extends HeuristicSearchMethod {
 				expandedNodes.add(firstNode.getState());
 			//4.3.2 EXPAND node’s state AND Insert successor nodes into the frontier
 				successorNodes = this.expandH(firstNode, expandedNodes, frontier, problem);
-				frontier.addAll(successorNodes);
-			//4.3.3 Sort the frontier in ascending order of f(n)
-				Collections.sort(frontier);
+			//	successorNodes = this.expand(firstNode, problem, generatedStates, expandedNodes);
+				if(successorNodes != null && !successorNodes.isEmpty())
+				{
+					frontier.addAll(successorNodes);
+				//4.3.3 Sort the frontier in ascending order of f(n)
+					Collections.sort(frontier);
+					Collections.reverse(frontier);
+				}
 			}
 		}
+		this.closeLog(searchLog);
 		//5.IF final state found THEN return sequence of actions found
 		if(solutionFound)
 		{
@@ -120,7 +128,7 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	 * */
 	protected List<Node> expandH(Node node, List<State> expandedNodes,List<Node> frontier, Problem problem) {
 	
-		List<Node> successorNodes = null;
+		List<Node> successorNodes = new ArrayList<Node>();
 		Node successorNode = null;
 		State successorState = null;
 		State currentState = node.getState();
@@ -128,46 +136,49 @@ public class AStarWithLog extends HeuristicSearchMethod {
 		for(Operator operator: problem.getOperators())
 		{
 			successorState = operator.apply(currentState);
-			successorNode = new Node(successorState);
-			//1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
-			if(!frontier.contains(successorNode) && !expandedNodes.contains(successorNode))
+			if(successorState != null)
 			{
-			//	Compute f(successor) = g(successor) + h(successor)
-				successorNode.setOperator(operator.getName());
-				successorNode.setParent(node);
-				successorNode.setDepth(node.getDepth() + 1);
-				//evaluation function = heuristic function
-				successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
-				successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
-			//	Create parent link between successor and node
-				successorNode.setParent(node);
-			//	Add successor to list of successors
-				successorNodes.add(successorNode);
-			}
-		//1.2 IF successor is in frontier THEN
-			else if(frontier.contains(node))
-			{
-		//	Compute fnew(successor) = g(successor) + h(successor)
-				successorNode.setOperator(operator.getName());
-				successorNode.setParent(node);
-				successorNode.setDepth(node.getDepth() + 1);
-				//evaluation function = heuristic function
-				successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
-				successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
-		//	IF fprevious(successor) “worse than” fnew(successor) THEN
-				Node previousNode = this.getNodeFrontier(frontier, successorNode);
-				double fPreviousNode = (previousNode.getG() + previousNode.getH());
-				double fsuccessorNode = (successorNode.getG() + successorNode.getH());
-				if(fPreviousNode > fsuccessorNode)
+				successorNode = new Node(successorState);
+				//1.1 IF successor NOT in frontier nor EXPANDED nodes THEN
+				if(!frontier.contains(successorNode) && !expandedNodes.contains(successorNode))
 				{
-			//	Remove previous parent link for successor and make parent link to node
-					successorNode.setParent(previousNode.getParent());
-					frontier.remove(previousNode);
-			//	Make f(successor)= fnew(successor)
+				//	Compute f(successor) = g(successor) + h(successor)
+					successorNode.setOperator(operator.getName());
+					successorNode.setParent(node);
+					successorNode.setDepth(node.getDepth() + 1);
+					//evaluation function = heuristic function
+					successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+					successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+				//	Create parent link between successor and node
+					successorNode.setParent(node);
+				//	Add successor to list of successors
+					successorNodes.add(successorNode);
+				}
+			//1.2 IF successor is in frontier THEN
+				else if(frontier.contains(successorNode))
+				{
+			//	Compute fnew(successor) = g(successor) + h(successor)
+					successorNode.setOperator(operator.getName());
+					successorNode.setParent(node);
+					successorNode.setDepth(node.getDepth() + 1);
+					//evaluation function = heuristic function
+					successorNode.setG(this.getEvaluationFunction().calculateG(successorNode));
+					successorNode.setH(this.getEvaluationFunction().calculateH(successorNode));
+			//	IF fprevious(successor) “worse than” fnew(successor) THEN
+					Node previousNode = this.getNodeFrontier(frontier, successorNode);
+					double fPreviousNode = (previousNode.getG() + previousNode.getH());
+					double fsuccessorNode = (successorNode.getG() + successorNode.getH());
+					if(fPreviousNode > fsuccessorNode)
+					{
+				//	Remove previous parent link for successor and make parent link to node
+						successorNode.setParent(previousNode.getParent());
+						frontier.remove(previousNode);
+				//	Make f(successor)= fnew(successor)
+					}
 				}
 			}
 		//1.3 IF successor is in EXPANDED nodes THEN
-			if(expandedNodes.contains(node))
+			if(expandedNodes.contains(successorNode))
 			{
 		//	Compute fnew(successor) = g(successor) + h(successor)
 				successorNode.setOperator(operator.getName());
@@ -184,20 +195,21 @@ public class AStarWithLog extends HeuristicSearchMethod {
 				{
 			//	Remove previous parent link for successor and make parent link to node
 					successorNode.setParent(previousNode.getParent());
+					frontier.remove(previousNode);
 			//	Make f(successor)= fnew(successor) and update f() for each of successor’s children
 				}
 			}
-		//2.return list of successors
 		
 		}
-		
+		//2.return list of successors
+
 		return successorNodes;
 	}
 	
 	public Node getNodeFrontier(List<Node> frontier, Node node)
 	{
 		Node sameNode = null;
-		Iterator iterator = frontier.iterator();
+		Iterator<Node> iterator = frontier.iterator();
 		while (iterator.hasNext())
 		{
 			if (node.equals(iterator))

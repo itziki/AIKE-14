@@ -110,7 +110,7 @@ public class MoveOperator extends Operator{
 		Environment newEnvironment = environment.clone();
 		CurrentPosition cp = null;
 		
-		
+		System.out.println(environment.getCp().getY() + ", " + environment.getCp().getX());
 		switch (this.direction)
 		{
 			case RIGHT: {cp = new CurrentPosition((environment.getCp().getX() + 1), environment.getCp().getY());}break;
