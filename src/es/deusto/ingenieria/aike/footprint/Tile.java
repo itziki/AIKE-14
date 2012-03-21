@@ -10,20 +10,6 @@ public class Tile extends Point {
 	private boolean rightFoot;
 	private boolean leftFoot;
 	
-/*	public Tile()
-	{
-		
-	}
-	
-	public Tile(int row, int column, boolean bottomWall, boolean rightWall, boolean rightFoot, boolean leftFoot)
-	{
-		super(row, column);
-		this.bottomWall = bottomWall;
-		this.rightWall = rightWall;
-		this.rightFoot = rightFoot;
-		this.leftFoot = leftFoot;
-	}*/
-
 	public boolean isBottomWall() {
 		return bottomWall;
 	}
@@ -39,7 +25,6 @@ public class Tile extends Point {
 	public void setRightWall(boolean rightWall) {
 		this.rightWall = rightWall;
 	}
-
 
 	public boolean isRightFoot() {
 		return rightFoot;

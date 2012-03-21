@@ -12,14 +12,6 @@ public class Environment {
 		this.goal = new Position(goal.getX(), goal.getY());
 	}
 
-/*	public Board getBoard() {
-		return board;
-	}
-
-	public void setBoard(Board board) {
-		this.board = board;
-	}*/
-	
 	public Tile getTile(int x, int y) {
 		return tiles[y][x];
 	}
@@ -60,9 +52,6 @@ public class Environment {
 	
 	public boolean equals(Object obj)
 	{
-	/*	return (this.board.equals(env.getBoard()) && this.cp.equals(env.getCp()) 
-				  && this.goal.equals(env.getGoal()));*/
-		
 		if (obj != null && obj instanceof Environment) {
 			return ((Environment)obj).getCp().equals(this.cp);
 		} else {
@@ -87,5 +76,4 @@ public class Environment {
 		}
 		return boardString;
 	}
-	
 }

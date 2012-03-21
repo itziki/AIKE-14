@@ -29,7 +29,6 @@ public class MoveOperator extends Operator {
 	{
 		Environment escenario = (Environment)state.getInformation();
 		Position currPos = escenario.getCp();
-		//Board board = escenario.getBoard();
 		Tile[][] tiles = escenario.getTiles();
 
 		switch (this.direction)
@@ -62,9 +61,7 @@ public class MoveOperator extends Operator {
 		Environment environment = (Environment)state.getInformation();
 		Environment newEnvironment = environment.clone();
 		Position cp = environment.getCp();
-		
-		System.out.println("ESTOY EN FILA " + environment.getCp().getY() + ", COLUMNA " + environment.getCp().getX());
-		System.out.println("GOAL FILA " + environment.getGoal().getY() + ", COLUMNA " + environment.getGoal().getX());
+
 		switch (this.direction)
 		{
 			case RIGHT:
@@ -80,10 +77,7 @@ public class MoveOperator extends Operator {
 				newEnvironment.setCp(new Position(cp.getX(), cp.getY() - 1));
 				break;
 		}
-		
-		System.out.println("ME MUEVO A FILA: " + newEnvironment.getCp().getY() + " COLUMNA: " + newEnvironment.getCp().getX());
-		System.out.println(Math.abs(environment.getGoal().getY()-cp.getY()) + Math.abs(environment.getGoal().getX()-cp.getX()));
-		
+
 		return new State(newEnvironment);	
 	}	
 }

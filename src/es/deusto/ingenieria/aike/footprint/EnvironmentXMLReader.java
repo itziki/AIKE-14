@@ -7,7 +7,6 @@ import es.deusto.ingenieria.aike.xml.InformationXMLReader;
 
 public class EnvironmentXMLReader extends InformationXMLReader
 {
-        //private Board board;
 		private Tile[][] tiles;
         private Position pos;
         private Position goal;
@@ -37,10 +36,6 @@ public class EnvironmentXMLReader extends InformationXMLReader
             						this.tiles[y][x].setLeftFoot(false);
             					}
             				}
-                        		// int[] tam = new int[2];
-                               // tam[0]= Integer.parseInt(attributes.getValue("rows"));
-                               // tam[1]= Integer.parseInt(attributes.getValue("columns"));
-                               // this.board = new Board(tam);
                         } 
                         else if (qName.equals("aike:start"))
                         {
@@ -60,26 +55,14 @@ public class EnvironmentXMLReader extends InformationXMLReader
                         {
                         	this.tiles[Integer.parseInt(attributes.getValue("row"))-1][Integer.parseInt(attributes.getValue("column"))-1].setLeftFoot(true);
                         	this.tiles[Integer.parseInt(attributes.getValue("row"))-1][Integer.parseInt(attributes.getValue("column"))-1].setRightFoot(false);
-                        	/*int[]pos = new int[2];
-                            pos[0] = Integer.parseInt(attributes.getValue("row"))-1;
-                            pos[1] = Integer.parseInt(attributes.getValue("column"))-1;
-                            board.setTile(pos, false, true);*/
                         }
                         else if (qName.equals("aike:right-wall"))
                         {
                         	this.tiles[Integer.parseInt(attributes.getValue("row"))-1][Integer.parseInt(attributes.getValue("column"))-1].setRightWall(true);
-                        /*	int[]pos = new int[2];
-                            pos[0] = Integer.parseInt(attributes.getValue("row"))-1;
-                            pos[1] = Integer.parseInt(attributes.getValue("column"))-1;
-                            board.setTileVerticalWall(pos, true);*/
                         }                
                         else if (qName.equals("aike:bottom-wall"))
                         {
                         	this.tiles[Integer.parseInt(attributes.getValue("row"))-1][Integer.parseInt(attributes.getValue("column"))-1].setBottomWall(true);
-                        	/*int[]pos = new int[2];
-                            pos[0] = Integer.parseInt(attributes.getValue("row"))-1;
-                            pos[1] = Integer.parseInt(attributes.getValue("column"))-1;
-                            board.setTileHorizontalWall(pos, true);*/
                         }
                 } catch (Exception ex) {
                         System.out.println(this.getClass().getName() + ".startElement(): " + ex);
