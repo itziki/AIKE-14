@@ -4,26 +4,15 @@ import java.awt.Point;
 
 public class Tile extends Point {
 	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private boolean bottomWall;
 	private boolean rightWall;
-	private int column;
-	private int row;
 	private boolean rightFoot;
 	private boolean leftFoot;
 	
-	public Tile()
+/*	public Tile()
 	{
 		
-	}
-	
-	public Tile(int row, int column)
-	{
-		super(row, column);
 	}
 	
 	public Tile(int row, int column, boolean bottomWall, boolean rightWall, boolean rightFoot, boolean leftFoot)
@@ -33,7 +22,7 @@ public class Tile extends Point {
 		this.rightWall = rightWall;
 		this.rightFoot = rightFoot;
 		this.leftFoot = leftFoot;
-	}
+	}*/
 
 	public boolean isBottomWall() {
 		return bottomWall;
@@ -84,20 +73,32 @@ public class Tile extends Point {
 		return this.x;
 	}
 	
+	public int getFoot() {
+		if (rightFoot == true)
+			return 0;
+		else
+			return 1;
+	}
+	
 	public boolean equals(Object obj) {
-		boolean result = false;
-		if (obj != null	&& obj instanceof Tile) 
-		{
-			Tile tileTemp = (Tile)obj;
-			if (tileTemp.bottomWall == this.bottomWall &&
-					tileTemp.rightWall == this.rightWall &&
-						tileTemp.rightFoot == this.rightFoot &&
-							tileTemp.leftFoot == this.leftFoot &&
-								tileTemp.column == this.column &&
-									tileTemp.row == this.row)
-				result = true;
-		} 
-		return result;
+		if (obj != null	&& obj instanceof Tile) {
+			return ((Tile)obj).x == x && ((Tile)obj).y == y;
+		} else {
+			return false;
+		}
+	}
+	
+	public Tile clone() {
+		Tile newTile = new Tile();
+		
+		newTile.rightFoot = this.rightFoot;
+		newTile.leftFoot = this.leftFoot;
+		newTile.bottomWall = this.bottomWall;
+		newTile.rightWall = this.rightWall;
+		newTile.x = this.x;
+		newTile.y = this.y;
+		
+		return newTile;
 	}
 	
 	public Point getPosition() {

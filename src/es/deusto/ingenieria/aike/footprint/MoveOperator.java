@@ -3,8 +3,8 @@ package es.deusto.ingenieria.aike.footprint;
 import es.deusto.ingenieria.aike.formulation.Operator;
 import es.deusto.ingenieria.aike.formulation.State;
 
-public class MoveOperator extends Operator{
-	//TO DO
+public class MoveOperator extends Operator {
+
 	public static enum Direction
 	{
 		RIGHT,
@@ -14,11 +14,10 @@ public class MoveOperator extends Operator{
 	}
 	
 	private Direction direction;
-	private Board board;
 	
 	public MoveOperator(Direction direction)
 	{
-		super(("Move " + direction.toString()), 1d);
+		super("Move-" + direction.toString());
 		this.direction = direction;
 	}
 
@@ -26,109 +25,65 @@ public class MoveOperator extends Operator{
 	//the adjacent tile has the contrary foot
 	//there is no wall between the tiles
 	//the next tile is inside the board
-	protected boolean isApplicable(State state) {
+	protected boolean isApplicable(State state) 
+	{
 		Environment escenario = (Environment)state.getInformation();
-		CurrentPosition currPos = escenario.getCp();
-		board = escenario.getBoard();
-		boolean result = false;
-		//System.out.println("cp right: " + currPos.getY() + "," + currPos.getX());
-		if (board.getTile(currPos.getY(), currPos.getX()).isRightFoot())
+		Position currPos = escenario.getCp();
+		//Board board = escenario.getBoard();
+		Tile[][] tiles = escenario.getTiles();
+
+		switch (this.direction)
 		{
-				switch (this.direction)
-				{
-					case RIGHT:
-						if(board.getTile(currPos.getY(), currPos.getX() + 1).isLeftFoot() &&
-							!board.getTile(currPos.getY(), currPos.getX()).isRightWall() &&
-							currPos.getX() < board.getTam()[1] - 2)
-						{
-							result = true;
-						} break;
-					case LEFT:
-						if(board.getTile(currPos.getY(), currPos.getX() - 1).isLeftFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX() - 1).isRightWall() &&
-								currPos.getX() > 1)
-							{
-								result = true;
-							}break;
-					case DOWN:
-						if(board.getTile(currPos.getY() + 1, currPos.getX()).isLeftFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
-								currPos.getY() < board.getTam()[0] - 2) //¿?
-							{
-								result = true;
-							}break;
-					case UP:
-						if(board.getTile(currPos.getY() - 1, currPos.getX()).isLeftFoot() &&
-								!board.getTile(currPos.getY() - 1, currPos.getX()).isBottomWall() &&
-								currPos.getY() > 1) //¿?
-							{
-								result = true;
-							}break;
-				}
+			case RIGHT:
+					return (currPos.getX() + 1 < tiles[0].length && 
+						tiles[currPos.getY()][currPos.getX() + 1].getFoot() != 
+								tiles[currPos.getY()][currPos.getX()].getFoot() &&
+								!tiles[currPos.getY()][currPos.getX()].isRightWall());
+			case LEFT:
+					return (currPos.getX() > 0 && 
+						tiles[currPos.getY()][currPos.getX() - 1].getFoot() != 
+							tiles[currPos.getY()][currPos.getX()].getFoot() &&
+								!tiles[currPos.getY()][currPos.getX() - 1].isRightWall());
+			case DOWN:	
+					return(currPos.getY() + 1 < tiles.length &&
+						tiles[currPos.getY() + 1][currPos.getX()].getFoot() != 
+							tiles[currPos.getY()][currPos.getX()].getFoot() &&
+								!tiles[currPos.getY()][currPos.getX()].isBottomWall());
+			case UP:
+					return(currPos.getY() > 0 && 
+						tiles[currPos.getY() - 1][currPos.getX()].getFoot() != 
+							tiles[currPos.getY()][currPos.getX()].getFoot() &&
+								!tiles[currPos.getY() - 1][currPos.getX()].isBottomWall());
 		}
-			else
-			{
-				switch (this.direction)
-				{
-					case RIGHT:
-						if(board.getTile(currPos.getY(), currPos.getX() + 1).isRightFoot() &&
-							!board.getTile(currPos.getY(), currPos.getX()).isRightWall() &&
-							currPos.getX() < board.getTam()[1] - 2)
-						{
-							result = true;
-						}break;
-					case LEFT:
-						if(board.getTile(currPos.getY(), currPos.getX() - 1).isRightFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX() - 1).isRightWall() &&
-								currPos.getX() > 1)
-							{
-								result = true;
-							}break;
-					case DOWN:
-						if(board.getTile(currPos.getY() + 1, currPos.getX()).isRightFoot() &&
-								!board.getTile(currPos.getY(), currPos.getX()).isBottomWall() &&
-								currPos.getY() < board.getTam()[0] - 2) 
-							{
-								result = true;
-							}break;
-					case UP:
-						if(board.getTile(currPos.getY() - 1, currPos.getX()).isRightFoot() &&
-								!board.getTile(currPos.getY() - 1, currPos.getX()).isBottomWall() &&
-								currPos.getY() > 1) 
-							{
-								
-								result = true;
-							}break;
-				}
-		}
-		
-		return result;
+		return false;
 	}
 	
 	protected State effect(State state) {		
 		Environment environment = (Environment)state.getInformation();
 		Environment newEnvironment = environment.clone();
-		CurrentPosition cp = null;
+		Position cp = environment.getCp();
 		
-		System.out.println(environment.getCp().getY() + ", " + environment.getCp().getX());
+		System.out.println("ESTOY EN FILA " + environment.getCp().getY() + ", COLUMNA " + environment.getCp().getX());
+		System.out.println("GOAL FILA " + environment.getGoal().getY() + ", COLUMNA " + environment.getGoal().getX());
 		switch (this.direction)
 		{
-			case RIGHT: {cp = new CurrentPosition((environment.getCp().getX() + 1), environment.getCp().getY());}break;
-			case LEFT: {cp = new CurrentPosition((environment.getCp().getX() - 1), environment.getCp().getY());}break;
-			case DOWN: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() + 1));}break;
-			case UP: {cp = new CurrentPosition(environment.getCp().getX(), (environment.getCp().getY() - 1));}break;
+			case RIGHT:
+				newEnvironment.setCp(new Position(cp.getX() + 1, cp.getY()));
+				break;
+			case LEFT:
+				newEnvironment.setCp(new Position(cp.getX() - 1, cp.getY()));
+				break;
+			case DOWN:
+				newEnvironment.setCp(new Position(cp.getX(), cp.getY() + 1));
+				break;
+			case UP:
+				newEnvironment.setCp(new Position(cp.getX(), cp.getY() - 1));
+				break;
 		}
 		
-		System.out.println("ME MUEVO A FILA: " + cp.getY() + "COLUMNA: " + cp.getX());
+		System.out.println("ME MUEVO A FILA: " + newEnvironment.getCp().getY() + " COLUMNA: " + newEnvironment.getCp().getX());
 		System.out.println(Math.abs(environment.getGoal().getY()-cp.getY()) + Math.abs(environment.getGoal().getX()-cp.getX()));
 		
-		newEnvironment.setBoard(environment.getBoard());
-		newEnvironment.setGoal(environment.getGoal());
-		newEnvironment.setCp(cp);
-		return new State(newEnvironment);
-		
-	}
-
-	
-	
+		return new State(newEnvironment);	
+	}	
 }

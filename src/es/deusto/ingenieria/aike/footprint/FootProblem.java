@@ -1,6 +1,8 @@
 package es.deusto.ingenieria.aike.footprint;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import es.deusto.ingenieria.aike.footprint.MoveOperator.Direction;
@@ -9,53 +11,41 @@ import es.deusto.ingenieria.aike.formulation.State;
 import es.deusto.ingenieria.ingenieria.search.Node;
 import es.deusto.ingenieria.ingenieria.search.SearchMethod;
 
-public class FootProblem extends Problem{
-	//TO DO
-	
-	public FootProblem(State state)
-	{
-		super();
-		this.addInitialState(state);
-		this.createOperators();
-	}
+public class FootProblem extends Problem {
 	
 	protected void createOperators()
 	{
-	
 		super.addOperator(new MoveOperator(Direction.RIGHT));
+		super.addOperator(new MoveOperator(Direction.UP));
 		super.addOperator(new MoveOperator(Direction.LEFT));
 		super.addOperator(new MoveOperator(Direction.DOWN));
-		super.addOperator(new MoveOperator(Direction.UP));
 	}
 	
 	public boolean isFinalState(State state)
 	{
-		boolean finalState = false;
-		if (state != null && state.getInformation() != null && state.getInformation() instanceof Environment)
-		{
-			Environment environment = (Environment)state.getInformation();
-			CurrentPosition cp = environment.getCp();
-			Goal goal = environment.getGoal();
-			
-			finalState = ((cp.getX() == goal.getX()) && (cp.getY() == goal.getY()));
+		if (state != null) {
+			Environment environment = (Environment)state.getInformation();			
+			return environment.getCp().equals(environment.getGoal());			
+		} else {
+			return false;
 		}
-		return finalState;
 	}
 	
 	public void solve(SearchMethod searchMethod)
-	{
+	{	
+		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss");
+		System.out.println("\n* Begin '" + searchMethod.getClass().getCanonicalName() + "' (" + formatter.format(GregorianCalendar.getInstance().getTime()) + ")");
 		Node finalNode = searchMethod.search(this, this.getInitialStates().get(0));
+		System.out.println("* End '" + searchMethod.getClass().getCanonicalName() + "' (" + formatter.format(GregorianCalendar.getInstance().getTime()) + ")");
 		
-		if(finalNode != null)
-		{
-			System.out.println("Solution found!");
+		if (finalNode != null) {			
 			List<String> operators = new ArrayList<String>();
 			searchMethod.solutionPath(finalNode, operators);
 			searchMethod.createSolutionLog(operators);
-		}
-		else
-		{
-			System.out.println("Unable to find the solution!");
+			System.out.println("* Solution found!!");
+			System.out.println("  * Movements: " + finalNode.getDepth());
+		} else {
+			System.out.println("* Solution not found :-(");
 		}
 	}
 }

@@ -1,44 +1,56 @@
 package es.deusto.ingenieria.aike.footprint;
 
 public class Environment {
-	private Board board;
-	private CurrentPosition cp;
-	private Goal goal;
+	private Tile[][] tiles;
+	private Position cp;
+	private Position goal;
 	
-	public Environment(Board board, CurrentPosition cp, Goal goal)
+	public Environment(Tile[][] tiles, Position cp, Position goal)
 	{
-		this.board = new Board(board.getTam(),board.getTiles());
-		this.cp = new CurrentPosition(cp.getX(), cp.getY());
-		this.goal = new Goal(goal.getX(), goal.getY());
+		this.tiles = tiles;
+		this.cp = new Position(cp.getX(), cp.getY());
+		this.goal = new Position(goal.getX(), goal.getY());
 	}
 
-	public Board getBoard() {
+/*	public Board getBoard() {
 		return board;
 	}
 
 	public void setBoard(Board board) {
 		this.board = board;
+	}*/
+	
+	public Tile getTile(int x, int y) {
+		return tiles[y][x];
 	}
 	
-	public CurrentPosition getCp() {
+	public Tile[][] getTiles() {
+		return tiles;
+	}
+	
+	public void setTiles(Tile[][] tiles) {
+		this.tiles = tiles;
+	}
+	
+	public Position getCp() {
 		return cp;
 	}
 
-	public void setCp(CurrentPosition cp) {
+	public void setCp(Position cp) {
 		this.cp = cp;
 	}
 
-	public Goal getGoal() {
+	public Position getGoal() {
 		return goal;
 	}
 
-	public void setGoal(Goal goal) {
+	public void setGoal(Position goal) {
 		this.goal = goal;
 	}
 
 	public Environment clone() 
 	{
-		return new Environment(this.getBoard(), this.getCp(), this.getGoal());
+		return new Environment(this.getTiles(), this.getCp(), this.getGoal());
 	}
 	
 	public String toString()
@@ -46,10 +58,34 @@ public class Environment {
 		return this.cp.toString();
 	}
 	
-	public boolean equals(Environment env)
+	public boolean equals(Object obj)
 	{
-		return (this.board.equals(env.getBoard()) && this.cp.equals(env.getCp()) 
-				  && this.goal.equals(env.getGoal()));
+	/*	return (this.board.equals(env.getBoard()) && this.cp.equals(env.getCp()) 
+				  && this.goal.equals(env.getGoal()));*/
+		
+		if (obj != null && obj instanceof Environment) {
+			return ((Environment)obj).getCp().equals(this.cp);
+		} else {
+			return false;
+		}
+	}
+	
+	public String toDrawString() 
+	{
+		String boardString = "";	
+		for (int i = 0; i < this.tiles.length; i++)
+		{
+			for (int j = 0; j < this.tiles[i].length; j++)
+			{
+				if (this.tiles[i][j].isRightFoot()) {
+					boardString = boardString + "R";
+				} else {
+					boardString = boardString + "L";
+				}
+			}
+			boardString = boardString + "\n";
+		}
+		return boardString;
 	}
 	
 }

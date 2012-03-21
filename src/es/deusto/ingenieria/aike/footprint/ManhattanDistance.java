@@ -25,9 +25,6 @@ public class ManhattanDistance extends EvaluationFunction {
 	
 	public double calculateH(Node node) {	
 		Environment env = (Environment)node.getState().getInformation();	
-		Environment env2 = env.clone();
-		Goal goal = env2.getGoal();
-		CurrentPosition cp = env2.getCp().clone();
-		return Math.abs(goal.getY()-cp.getY()) + Math.abs(goal.getX()-cp.getX());
+		return Math.abs(env.getGoal().getY()-env.getCp().getY()) + Math.abs(env.getGoal().getX()-env.getCp().getX());
 	}
 }

@@ -33,7 +33,7 @@ public class AStarWithLog extends HeuristicSearchMethod {
 	5.IF final state found THEN return sequence of actions found
 		ELSE return “solution not found” 
 	 */
-	
+
 	public Node search(Problem problem, State initialState) {
 
 		List<Node> successorNodes = null;
@@ -66,8 +66,8 @@ public class AStarWithLog extends HeuristicSearchMethod {
 			//4.3.1 Insert node into the EXPANDED nodes list
 				expandedNodes.add(firstNode.getState());
 			//4.3.2 EXPAND node’s state AND Insert successor nodes into the frontier
-				successorNodes = this.expandH(firstNode, expandedNodes, frontier, problem);
-			//	successorNodes = this.expand(firstNode, problem, generatedStates, expandedNodes);
+			//	successorNodes = this.expandH(firstNode, expandedNodes, frontier, problem);
+				successorNodes = this.expand(firstNode, problem, generatedStates, expandedNodes);
 				if(successorNodes != null && !successorNodes.isEmpty())
 				{
 					frontier.addAll(successorNodes);
